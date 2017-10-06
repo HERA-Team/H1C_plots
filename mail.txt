@@ -1,5 +1,0 @@
-To: nkern@berkeley.edu
-Subject: HERA Comissioning Plots
-From: nkern@nrao.edu
-Check out https://github.com/HERA-Team/HERA_plots
-for inspection of recent data from the RTP.
