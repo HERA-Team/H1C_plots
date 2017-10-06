@@ -1,4 +1,4 @@
 To: heraops@reionization.org
 Subject: HERA Comissioning Plots for @@JD@@
 From: nkern@nrao.edu
-Check out https://github.com/HERA-Team/HERA_plots for inspection of JD=@@JD@@ data from the RTP.
+Check out https://github.com/HERA-Team/HERA_plots/blob/master/data_inspect_@@JD@@.ipynb for inspection of JD=@@JD@@ data from the RTP.
