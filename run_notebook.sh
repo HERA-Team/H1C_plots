@@ -44,3 +44,5 @@ cd $OUTPUTDIR
 git add $OUTPUT
 git commit -m "data inspect notebook for $jd"
 git push
+
+sendmail -vt < mail.txt
