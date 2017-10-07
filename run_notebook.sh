@@ -29,7 +29,7 @@ set -e
 # Librarian to populate it.
 
 sessid="$1"
-staging_dir=$(mktemp -d --tmpdir=/lustre/aoc/projects/hera/nightlynb sessid$sessid_XXXXXX)
+staging_dir=$(mktemp -d --tmpdir=/lustre/aoc/projects/hera/nightlynb sessid$sessid.XXXXXX)
 chmod ug+rwx "$staging_dir"
 
 search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uv\"}"
@@ -72,7 +72,6 @@ jupyter nbconvert --output=$OUTPUTDIR/$OUTPUT \
   --ExecutePreprocessor.timeout=-1 \
   --execute $BASENBDIR/Data_Inspect.ipynb
 
-exit 0
 # cd to git repo
 cd $OUTPUTDIR
 
