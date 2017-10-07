@@ -76,4 +76,7 @@ git add $OUTPUT
 git commit -m "data inspect notebook for $jd"
 git push
 
+sed -e 's/@@JD@@/'$jd'/g' < mail_template.txt > mail.txt
+sendmail -vt < mail.txt
+
 rm -rf "$staging_dir"
