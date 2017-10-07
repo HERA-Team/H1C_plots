@@ -49,7 +49,11 @@ DATA_PATH=
 for item in "$staging_dir"/2* ; do
     if [ -n "$DATA_PATH" ] ; then
         echo >&1 "WARNING: multiple subdirectories staged? $DATA_PATH, $item"
-        break
+        exit 1
+    fi
+    if [ "$(basename $item)" == "2*" ] ; then
+        echo >&1 "WARNING: no subdirectory staged: $item"
+        exit 1
     fi
     export DATA_PATH="$item"
 done
