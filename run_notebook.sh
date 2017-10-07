@@ -30,18 +30,18 @@ set -e
 
 sessid="$1"
 staging_dir=$(mktemp -d --tmpdir=/lustre/aoc/projects/hera/nightlynb sessid$sessid.XXXXXX)
-search="{
- \"session-id-is-exactly\": $sessid,
- \"or\": {
-  \"name-matches\": \"%.HH.uv\",
-  \"name-matches\": \"%.HH.uvOR\",
-  \"name-matches\": \"%.json\",
-  \"name-matches\": \"%.calfits\"
- }
-}
-"
-
 chmod ug+rwx "$staging_dir"
+
+search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uv\"}"
+librarian_stage_files.py --wait local "$staging_dir" "$search"
+
+search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uvOR\"}"
+librarian_stage_files.py --wait local "$staging_dir" "$search"
+
+search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.json\"}"
+librarian_stage_files.py --wait local "$staging_dir" "$search"
+
+search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.calfits\"}"
 librarian_stage_files.py --wait local "$staging_dir" "$search"
 
 DATA_PATH=
