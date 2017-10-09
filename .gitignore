@@ -1,2 +1,4 @@
 *__pycache__
 *.pyc
+run_notebook.sh.o*
+run_notebook.sh.e*
