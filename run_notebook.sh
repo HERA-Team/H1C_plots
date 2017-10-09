@@ -4,31 +4,22 @@
 if [ $1 = '-h' ] || [ $1 = '--help' ]
 then
     echo 'Usage:'
-    echo 'run_notebook.sh <arg1: session ID> <arg2: HERA_plots/ path>'
-    echo ''
-    echo 'argument1 : the ID of the session to process'
-    echo 'argument2 : path to HERA_plots/ directory'
+    echo 'export sessid=<sessid>'
+    echo 'qsub -V -q hera run_notebook.sh'
     exit 0
 fi
 
-if [ -z "$1" ] ; then
-    echo "arg1 is blank"
-    exit 1
-fi
-
-if [ -z "$2" ] ; then
-    echo "arg2 is blank"
+if [ -z "$sessid" ] ; then
+    echo "environ variable 'sessid' is undefined"
     exit 1
 fi
 
 # Exit with an error if any sub-command fails.
-
 set -e
 
 # Create a temporary Lustre directory for exporting the data and command the
 # Librarian to populate it.
 
-sessid="$1"
 staging_dir=$(mktemp -d --tmpdir=/lustre/aoc/projects/hera/nightlynb sessid$sessid.XXXXXX)
 chmod ug+rwx "$staging_dir"
 
@@ -61,16 +52,20 @@ done
 jd=$(basename $DATA_PATH)
 
 # get more env vars
-BASENBDIR=$2
+BASENBDIR=/lustre/aoc/projects/hera/nkern/Software/HERA_plots
 OUTPUT=data_inspect_"$jd".ipynb
-OUTPUTDIR=$2
+OUTPUTDIR=/lustre/aoc/projects/hera/nkern/Software/HERA_plots
 
 # copy and run notebook
+echo "starting notebook execution..."
+
 jupyter nbconvert --output=$OUTPUTDIR/$OUTPUT \
   --to notebook \
   --ExecutePreprocessor.allow_errors=True \
   --ExecutePreprocessor.timeout=-1 \
   --execute $BASENBDIR/Data_Inspect.ipynb
+
+echo "finished notebook execution..."
 
 # cd to git repo
 cd $OUTPUTDIR
@@ -80,7 +75,7 @@ git add $OUTPUT
 git commit -m "data inspect notebook for $jd"
 git push
 
-sed -e 's/@@JD@@/'$jd'/g' < mail_template.txt > mail.txt
-sendmail -vt < mail.txt
+#sed -e 's/@@JD@@/'$jd'/g' < mail_template.txt > mail.txt
+#sendmail -vt < mail.txt
 
 rm -rf "$staging_dir"
