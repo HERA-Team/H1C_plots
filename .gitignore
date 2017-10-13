@@ -2,3 +2,5 @@
 *.pyc
 run_notebook.sh.o*
 run_notebook.sh.e*
+outputs/*
+mail.txt

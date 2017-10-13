@@ -9,6 +9,10 @@ then
     exit 0
 fi
 
+# get sessid (hacky way that only works until Nov. 30th)
+cd /lustre/aoc/projects/hera/nkern/Software/HERA_plots
+export sessid=$(./check_lib.py)
+
 if [ -z "$sessid" ] ; then
     echo "environ variable 'sessid' is undefined"
     exit 1
@@ -33,6 +37,9 @@ search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.json\"}"
 librarian_stage_files.py --wait local "$staging_dir" "$search"
 
 search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.calfits\"}"
+librarian_stage_files.py --wait local "$staging_dir" "$search"
+
+search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.flag_summary.npz\"}"
 librarian_stage_files.py --wait local "$staging_dir" "$search"
 
 DATA_PATH=
@@ -67,15 +74,20 @@ jupyter nbconvert --output=$OUTPUTDIR/$OUTPUT \
 
 echo "finished notebook execution..."
 
+exit 0
 # cd to git repo
 cd $OUTPUTDIR
 
 # add to git repo
+echo "adding to GitHub repo"
 git add $OUTPUT
 git commit -m "data inspect notebook for $jd"
 git push
 
+echo "sending email to heraops"
 sed -e 's/@@JD@@/'$jd'/g' < mail_template.txt > mail.txt
 sendmail -vt < mail.txt
 
+echo "removing staging dir"
 rm -rf "$staging_dir"
+
