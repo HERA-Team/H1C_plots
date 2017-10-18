@@ -9,10 +9,6 @@ then
     exit 0
 fi
 
-# get sessid (hacky way that only works until Nov. 30th)
-cd /lustre/aoc/projects/hera/nkern/Software/HERA_plots
-export sessid=$(./check_lib.py)
-
 if [ -z "$sessid" ] ; then
     echo "environ variable 'sessid' is undefined"
     exit 1
@@ -74,7 +70,6 @@ jupyter nbconvert --output=$OUTPUTDIR/$OUTPUT \
 
 echo "finished notebook execution..."
 
-exit 0
 # cd to git repo
 cd $OUTPUTDIR
 
