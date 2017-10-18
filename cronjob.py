@@ -3,6 +3,14 @@
 # Copyright 2017 the HERA Collaboration
 # Licensed under the MIT License
 
+"""Check if there are any sessions on this Librarian that need to have
+the nightly data quality procesing done. If so, launch a job to do
+the processing.
+
+Because this script is a cronjob, it should not produce any output unless
+something bad happens, to avoid annoying daily emails.
+
+"""
 import os.path
 import subprocess
 import sys
@@ -51,7 +59,7 @@ def main():
     env['sessid'] = str(sessid)
 
     subprocess.check_call(
-        ['qsub', '-V', '-q', 'hera', plot_script],
+        ['qsub', '-z', '-V', '-q', 'hera', plot_script],
         shell = False,
         env = env
     )
