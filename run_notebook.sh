@@ -3,8 +3,7 @@
 librarian_conn_name=local
 
 # print out help statement
-if [ $1 = '-h' ] || [ $1 = '--help' ]
-then
+if [ "$1" = '-h' -o "$1" = '--help' ] ; then
     echo 'Usage:'
     echo 'export sessid=<sessid>'
     echo 'qsub -V -q hera run_notebook.sh'
