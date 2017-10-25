@@ -15,6 +15,7 @@ import os.path
 import subprocess
 import sys
 from hera_librarian import LibrarianClient
+import numpy as np
 
 connection_name = 'local'
 
@@ -28,6 +29,8 @@ connection_name = 'local'
 #    or
 #       b. Older than a few days, suggesting that we should just go
 #          ahead and process whatever we've got.
+#
+# Needs to be run w/ ipython: ipython cronjob.py
 
 search = '''
 {
@@ -40,26 +43,37 @@ search = '''
 '''
 
 def main():
+    # connect to librarian
     cl = LibrarianClient(connection_name)
 
+    # search for unprocessed sessions
     sessions = cl.search_sessions(search)['results']
 
     if not len(sessions):
         return # Nothing to do.
 
-    # Just pick one to process and submit the job that will
-    # actually crunch it.
-
-    sessid = sessions[0]['id']
-
+    # get path to plots dir
     plots_dir = os.path.dirname(sys.argv[0])
     plot_script = os.path.join(plots_dir, 'run_notebook.sh')
+
+    # check these sessid aren't in the processed_sessid.txt file
+    processed_sessid = np.loadtxt(os.path.join(plots_dir, 'processed_sessid.txt'), dtype=np.int)
+
+    # filter out sessions already processed
+    unprocessed_sessions = []
+    for sess in sessions:
+        if sess['id'] not in processed_sessid:
+            unprocessed_sessions.append(sess)
+
+    # Just pick one to process and submit the job that will
+    # actually crunch it.
+    sessid = unprocessed_sessions[0]['id']
 
     env = dict(os.environ)
     env['sessid'] = str(sessid)
 
     subprocess.check_call(
-        ['qsub', '-z', '-V', '-q', 'hera', plot_script],
+        ['/opt/services/torque/bin/qsub', '-z', '-V', '-q', 'hera', plot_script],
         shell = False,
         env = env
     )

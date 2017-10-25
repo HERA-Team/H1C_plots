@@ -77,6 +77,12 @@ cd $OUTPUTDIR
 # add to git repo
 echo "adding to GitHub repo"
 git add $OUTPUT
+
+# add sessid to processed_sessid.txt file
+echo $sessid >> $OUTPUTDIR/processed_sessid.txt
+git add $OUTPUTDIR/processed_sessid.txt
+
+# commit and push
 git commit -m "data inspect notebook for $jd"
 git push
 
