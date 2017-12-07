@@ -73,7 +73,7 @@ def main():
     env['sessid'] = str(sessid)
 
     subprocess.check_call(
-        ['/opt/services/torque/bin/qsub', '-z', '-V', '-q', 'hera', plot_script],
+        ['/opt/services/torque/bin/qsub', '-z', '-j', 'oe', '-o', '/lustre/aoc/projects/hera/nkern/qsub.log', '-V', '-q', 'hera', plot_script],
         shell = False,
         env = env
     )
