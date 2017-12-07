@@ -1,6 +1,7 @@
 #!/bin/bash
 
 librarian_conn_name=local
+echo $sessid
 
 # print out help statement
 if [ "$1" = '-h' -o "$1" = '--help' ] ; then
@@ -84,6 +85,7 @@ git add $OUTPUTDIR/processed_sessid.txt
 
 # commit and push
 git commit -m "data inspect notebook for $jd"
+git pull
 git push
 
 # mark these files as processed (see cronjob.py). We only need to mark one
