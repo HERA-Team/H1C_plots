@@ -1,7 +1,8 @@
 #!/bin/bash
 
 librarian_conn_name=local
-echo $sessid
+echo Date: $(date)
+echo sessid=$sessid
 
 # print out help statement
 if [ "$1" = '-h' -o "$1" = '--help' ] ; then
@@ -25,18 +26,23 @@ set -e
 staging_dir=$(mktemp -d --tmpdir=/lustre/aoc/projects/hera/nightlynb sessid$sessid.XXXXXX)
 chmod ug+rwx "$staging_dir"
 
+rm $staging_dir/STAGING*
 search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uv\"}"
 librarian_stage_files.py --wait $librarian_conn_name "$staging_dir" "$search"
 
+rm $staging_dir/STAGING*
 search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uvOR\"}"
 librarian_stage_files.py --wait $librarian_conn_name "$staging_dir" "$search"
 
+rm $staging_dir/STAGING*
 search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.json\"}"
 librarian_stage_files.py --wait $librarian_conn_name "$staging_dir" "$search"
 
+rm $staging_dir/STAGING*
 search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.calfits\"}"
 librarian_stage_files.py --wait $librarian_conn_name "$staging_dir" "$search"
 
+rm $staging_dir/STAGING*
 search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.flag_summary.npz\"}"
 librarian_stage_files.py --wait $librarian_conn_name "$staging_dir" "$search"
 
