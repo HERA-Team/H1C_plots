@@ -122,3 +122,7 @@ sendmail -vt < mail.txt
 
 echo "removing staging dir"
 rm -rf "$staging_dir"
+
+echo "finished run_notebook.sh"
+echo "Date:" $(date)
+exit 0
