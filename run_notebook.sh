@@ -2,13 +2,15 @@
 
 librarian_conn_name=local
 
+source activate hera
+
 echo Date: $(date)
 echo sessid=$sessid
 
 # print out help statement
 if [ "$1" = '-h' -o "$1" = '--help' ] ; then
     echo 'Usage:'
-    echo 'export sessid=<sessid>'
+    echo 'export sessid=<#3sessid>'
     echo 'qsub -V -q hera run_notebook.sh'
     exit 0
 fi
@@ -39,11 +41,11 @@ remove_staging_notes () {
 }
 
 remove_staging_notes $staging_dir
-search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uv\"}"
+search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uvh5\"}"
 librarian_stage_files.py --wait $librarian_conn_name "$staging_dir" "$search"
 
 remove_staging_notes $staging_dir
-search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.uvOR\"}"
+search="{\"session-id-is-exactly\": $sessid, \"name-matches\": \"%.HH.diff.uv\"}"
 librarian_stage_files.py --wait $librarian_conn_name "$staging_dir" "$search"
 
 remove_staging_notes $staging_dir
@@ -75,9 +77,9 @@ done
 jd=$(basename $DATA_PATH)
 
 # get more env vars
-BASENBDIR=/lustre/aoc/projects/hera/nkern/Software/HERA_plots
+BASENBDIR=/lustre/aoc/projects/hera/lberkhou/HERA_plots
 OUTPUT=data_inspect_"$jd".ipynb
-OUTPUTDIR=/lustre/aoc/projects/hera/nkern/Software/HERA_plots
+OUTPUTDIR=/lustre/aoc/projects/hera/lberkhou/HERA_plots
 
 # copy and run notebook
 echo "starting notebook execution..."
